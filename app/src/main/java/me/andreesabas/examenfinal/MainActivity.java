@@ -10,8 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.Vector;
+
 public class MainActivity extends AppCompatActivity {
 
+    public static AlmacenPuntuaciones almacen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button btnCreditos = (Button) findViewById(R.id.button);
-        Button btnPreferencias = (Button) findViewById(R.id.button2);
+        final Button btnPreferencias = (Button) findViewById(R.id.button2);
         Button btnWebServices = (Button) findViewById(R.id.button3);
         Button btnSalir = (Button) findViewById(R.id.button4);
+
 
         //* Mostrar Pop Up de créditos
         btnCreditos.setOnClickListener(new View.OnClickListener() {
@@ -48,6 +52,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //* Shared Preferences
+        btnPreferencias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                almacen = new AlmancenPuntuacionesPreferencias(getApplicationContext());
+                almacen.guardarPuntuacion(5000, "Darwin", 20181211);
+                almacen.guardarPuntuacion(5000, "test", 20181211);
+                almacen.guardarPuntuacion(5000, "test2", 20181211);
+                lanzarConf(v);
+            }
+        });
+
         //* Salir de la aplicación
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +73,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
+
+    public void lanzarConf(View view) {
+        Vector<String> rs = new Vector<String>();
+        rs = almacen.listaPuntuaciones(1);
+
+        for (int i = 0; i < rs.size(); i++){
+            Toast.makeText(getApplicationContext(), rs.get(i), Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
